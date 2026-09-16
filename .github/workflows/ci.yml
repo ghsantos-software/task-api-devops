@@ -11,10 +11,32 @@ on:
       - main
 
 jobs:
-
   test:
 
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+
+        env:
+          POSTGRES_DB: taskdb
+          POSTGRES_USER: taskuser
+          POSTGRES_PASSWORD: taskpass
+
+        ports:
+          - 5432:5432
+
+        options: >-
+          --health-cmd "pg_isready -U taskuser -d taskdb"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DB_URL: jdbc:postgresql://localhost:5432/taskdb
+      DB_USERNAME: taskuser
+      DB_PASSWORD: taskpass
 
     steps:
 
@@ -32,4 +54,4 @@ jobs:
         run: mvn clean test
 
       - name: Build application
-        run: mvn clean package
+        run: mvn package -DskipTests
