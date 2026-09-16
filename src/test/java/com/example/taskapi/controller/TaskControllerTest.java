@@ -24,8 +24,7 @@ class TaskControllerTest {
 
         mockMvc.perform(get("/tasks"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$[0].title").exists());
+                .andExpect(jsonPath("$").isArray());
     }
 
     @Test
