@@ -22,10 +22,24 @@ class TaskControllerTest {
     @Test
     void shouldReturnAllTasks() throws Exception {
 
+        String json = """
+            {
+                "title": "Studying Java",
+                "description": "Learning Spring Boot"
+            }
+            """;
+
+        mockMvc.perform(
+                        post("/tasks")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(json)
+                )
+                .andExpect(status().isCreated());
+
         mockMvc.perform(get("/tasks"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$[0].title").exists());
+                .andExpect(jsonPath("$[0].title").value("Studying Java"));
     }
 
     @Test
